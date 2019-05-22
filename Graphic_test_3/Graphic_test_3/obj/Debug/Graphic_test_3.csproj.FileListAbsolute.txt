@@ -1,0 +1,17 @@
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\Graphic_test_3.exe.config
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\Graphic_test_3.exe
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\Graphic_test_3.pdb
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.csprojAssemblyReference.cache
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.Form1.resources
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.Properties.Resources.resources
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.csproj.GenerateResource.cache
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.csproj.CoreCompileInputs.cache
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.exe
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.pdb
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\Ivi.Visa.dll
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\NationalInstruments.Visa.dll
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\Ivi.Visa.xml
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\bin\Debug\NationalInstruments.Visa.xml
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.exe.config
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.SelectResource.resources
+D:\visual studio\work\Graphic_test_3\Graphic_test_3\obj\Debug\Graphic_test_3.csproj.CopyComplete
