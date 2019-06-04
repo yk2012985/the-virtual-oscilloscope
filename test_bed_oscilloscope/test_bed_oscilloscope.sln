@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_bed_oscilloscope", "test_bed_oscilloscope\test_bed_oscilloscope.csproj", "{D060DBCB-B24D-4701-B7AE-1C42D581160B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D060DBCB-B24D-4701-B7AE-1C42D581160B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D060DBCB-B24D-4701-B7AE-1C42D581160B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D060DBCB-B24D-4701-B7AE-1C42D581160B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D060DBCB-B24D-4701-B7AE-1C42D581160B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3275472D-4C08-4501-98C9-33378F7AFD0F}
+	EndGlobalSection
+EndGlobal
