@@ -297,7 +297,7 @@ namespace function_generator_test
         }
 
         //操作部分
-        private void ch1_toogle_CheckedChanged(object sender, EventArgs e)
+        private void ch1_toogle_CheckedChanged(object sender, EventArgs e)  //ch1通道开关
         {
             if(ch1_toogle.Checked == true)
             {
@@ -321,11 +321,16 @@ namespace function_generator_test
             }
         }
 
-        private void ch1_wave_select_SelectedIndexChanged(object sender, EventArgs e)
+        private void ch1_wave_select_SelectedIndexChanged(object sender, EventArgs e)   //ch1通道波形选择
         {
             switch (ch1_wave_select.SelectedIndex)
             {
                 case 0:
+                    if (duty_cycle1.Visible == true && duty_cycle1_text.Visible == true)
+                    {
+                        duty_cycle1.Visible = false;
+                        duty_cycle1_text.Visible = false;
+                    }
                     try
                     {
                         mbSession.RawIO.Write("source1:function:shape sin");
@@ -340,6 +345,11 @@ namespace function_generator_test
                     draw_sine(1, wave_pen_1);
                     break;
                 case 1:
+                    if (duty_cycle1.Visible == true && duty_cycle1_text.Visible == true)
+                    {
+                        duty_cycle1.Visible = false;
+                        duty_cycle1_text.Visible = false;
+                    }
                     try
                     {
                         mbSession.RawIO.Write("source1:function:shape squ");
@@ -351,6 +361,11 @@ namespace function_generator_test
                     draw_square(1, wave_pen_1);
                     break;
                 case 2:
+                    if (duty_cycle1.Visible == true && duty_cycle1_text.Visible == true)
+                    {
+                        duty_cycle1.Visible = false;
+                        duty_cycle1_text.Visible = false;
+                    }
                     try
                     {
                         mbSession.RawIO.Write("source1:function:shape ramp");
@@ -362,11 +377,15 @@ namespace function_generator_test
                     draw_ramp(1, wave_pen_1);
                     break;
                 case 3:
+                    
                     try
                     {
                         mbSession.RawIO.Write("source1:function:shape puls");
                         mbSession.RawIO.Write("source1:pulse:dcycle?");
                         string duty_response = mbSession.RawIO.ReadString();
+                        duty_cycle1.Visible = true;
+                        duty_cycle1_text.Visible = true; //显示占空比栏
+                        duty_cycle1_text.Text = duty_response;   //将占空比填入
                         float duty = float.Parse(duty_response);
                         MessageBox.Show(duty_response);
                         draw_pulse(1, wave_pen_1, duty);
@@ -377,6 +396,331 @@ namespace function_generator_test
                     }                    
                     
                     break;
+            }
+        }
+
+
+
+        //频率修改部分
+
+        private void freq_handling(int ch_num)  //频率处理函数
+        {
+            try
+            {
+                mbSession.RawIO.Write("source1:frequency:cw?");
+                string freq_response = mbSession.RawIO.ReadString();    //得到当前的频率
+                string[] data_array = freq_response.Split('e');
+                //MessageBox.Show(data_array[0] + "," + data_array[1]);   //测试
+                freq1.Text = data_array[0];
+                string[] freq_unit = data_array[1].Split('0');
+                //MessageBox.Show(freq_unit[1]);    //test
+                if (freq_unit[0] == "+")
+                {
+                    try
+                    {
+                        switch (int.Parse(freq_unit[1]))
+                        {
+                            case 3:
+                                fre1_unit.SelectedIndex = 1;    //kHz
+                                break;
+                            case 6:
+                                fre1_unit.SelectedIndex = 2;    //MHz
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        fre1_unit.SelectedIndex = 0;    //Hz
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("频率小于1Hz");    //mHz
+                }
+                float period = 1/float.Parse(freq_response);    //用频率求得周期
+                if (period > 1) //周期为s
+                {
+                    period1_text.Text = period.ToString();  //将周期填入
+                    period1_unit.SelectedIndex = 1;
+                    time_unit.Text = "s";
+
+                    //修改横坐标
+                    x_1.Text = (period / 2).ToString();
+                    x_2.Text = period.ToString();
+                    x_3.Text = (period * 1.5).ToString();
+                    x_4.Text = (period * 2).ToString();
+                }
+                else    //周期为ms
+                {
+                    period1_text.Text = (period * 1000).ToString();
+                    period1_unit.SelectedIndex = 0;
+                    time_unit.Text = "ms";
+                    //修改横坐标
+                    x_1.Text = (period *500).ToString();
+                    x_2.Text = (period*1000).ToString();
+                    x_3.Text = (period * 1500).ToString();
+                    x_4.Text = (period * 2000).ToString();
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void freq1_TextChanged(object sender, EventArgs e)
+        {
+            //if (freq1.Text == "")
+            //{
+            //    mbSession.RawIO.Write("source1:frequency:cw?");
+            //    string freq_response = mbSession.RawIO.ReadString();
+            //    string[] data_array = freq_response.Split('e');
+            //    MessageBox.Show(data_array[0] + "," + data_array[1]);
+            //}
+        }
+
+        private void freq1_Leave(object sender, EventArgs e)    //ch1频率文本框失去焦点
+        {
+            if (freq1.Text == "")       //用户没有填入数据
+            {
+                freq_handling(1);
+
+            }
+            else    //用户填入数据
+            {
+                try
+                {
+                    mbSession.RawIO.Write("source1:frequency:cw " + freq1.Text +fre1_unit.SelectedItem.ToString()); //修改频率指令
+                    freq_handling(1);
+
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void fre1_unit_SelectedIndexChanged(object sender, EventArgs e) //改变频率
+        {
+            if (freq1.Text == "")       //用户没有填入数据
+            {
+                freq_handling(1);
+
+            }
+            else    //用户填入数据
+            {
+                try
+                {
+                    mbSession.RawIO.Write("source1:frequency:cw " + freq1.Text + fre1_unit.SelectedItem.ToString()); //修改频率指令
+                    freq_handling(1);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+
+        //幅度部分
+
+        private void y_axis_handling(int ch)    //纵坐标处理
+        {
+            try
+            {
+                mbSession.RawIO.Write("source1:voltage:level:immediate:amplitude?");
+                string amplitude_response = mbSession.RawIO.ReadString();
+                mbSession.RawIO.Write("source1:voltage:level:immediate:offset?");
+                string offset_response = mbSession.RawIO.ReadString();
+                y_axis_formating(ch, amplitude_response, offset_response);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        //幅值组数据及纵坐标格式修正
+        private void y_axis_formating(int ch, string amplitude, string offset)
+        {
+            float amplitude_f = float.Parse(amplitude); //将幅值转为浮点数
+            float offset_f = float.Parse(offset);   //将偏置转为浮点数
+
+            double high_level = offset_f + 0.5 * amplitude_f;   //计算高电平
+            double low_level = offset_f - 0.5 * amplitude_f;    //计算低电平
+
+            //string[] amp_array = amplitude.Split('e');  //对幅值进行处理
+            //string[] vpp_unit = amp_array[1].Split('0');
+
+            if (amplitude_f*1000>1000)
+            {
+                amplitude1.Text = amplitude_f.ToString();
+                vpp_u.SelectedIndex = 1;
+                //amplitude_unit.Text = "V";
+
+            }
+            else
+            {
+                amplitude1.Text = (amplitude_f*1000).ToString();
+                
+                vpp_u.SelectedIndex = 0;
+                //amplitude_unit.Text = "mV";
+            }
+
+
+            //string[] offset_array = offset.Split('e');   //对偏执进行处理
+            //string[] offset_unit = offset_array[1].Split('0');
+
+            if(offset_f*1000>1000)
+            {
+                offset1.Text = offset_f.ToString();
+                offset1_u.SelectedIndex = 1;
+                
+            }
+            else
+            {
+                y_1.Text = offset1.Text = (offset_f*1000).ToString(); //同时赋值偏置文本和中心纵坐标
+                offset1_u.SelectedIndex = 0;
+            }
+
+            if (high_level * 1000 > 1000)
+            {
+                high_level1.Text = high_level.ToString();
+                high_level1_u.SelectedIndex = 1;
+                y_2.Text = high_level.ToString();
+            }
+            else
+            {
+                high_level1.Text = (high_level * 1000).ToString();
+                high_level1_u.SelectedIndex = 0;
+                y_2.Text = (high_level * 1000).ToString();
+            }
+
+            if (low_level * 1000 > 1000)
+            {
+                low_level1.Text = low_level.ToString();
+                low_level1_u.SelectedIndex = 1;
+                y_0.Text = low_level.ToString();
+            }
+            else
+            {
+                low_level1.Text = (low_level * 1000).ToString();
+                low_level1_u.SelectedIndex = 0;
+                y_0.Text = (low_level * 1000).ToString();
+            }
+
+        }
+
+        private void amplitude1_Leave(object sender, EventArgs e)
+        {
+            if (amplitude1.Text == "")
+            {
+                y_axis_handling(1);
+            }
+            else
+            {
+                try
+                {
+                    mbSession.RawIO.Write("source1:voltage:level:immediate:amplitude "+amplitude1.Text+vpp_u.SelectedItem.ToString());
+                    y_axis_handling(1);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        //偏置操作
+
+        private void offset_handling(int ch)
+        {
+
+        }
+        private void offset_Leave(object sender, EventArgs e)
+        {
+            if (offset1.Text == "")
+            {
+                y_axis_handling(1);
+            }
+            else
+            {
+                try
+                {
+                    mbSession.RawIO.Write("source1:voltage:level:immediate:offset " + offset1.Text + offset1_u.SelectedItem.ToString());
+                    y_axis_handling(1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void low_level1_Leave(object sender, EventArgs e)   //
+        {
+            if (low_level1.Text == "")
+            {
+                y_axis_handling(1);
+            }
+            else
+            {
+                float amp = float.Parse(high_level1.Text) - float.Parse(low_level1.Text);
+                try
+                {
+                    mbSession.RawIO.Write("source1:voltage:level:immediate:amplitude " + amp.ToString() + low_level1_u.SelectedItem.ToString());
+                    y_axis_handling(1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void high_level1_Leave(object sender, EventArgs e)
+        {
+            if (high_level1.Text == "")
+            {
+                y_axis_handling(1);
+            }
+            else
+            {
+                float amp = float.Parse(high_level1.Text) - float.Parse(low_level1.Text);
+                try
+                {
+                    mbSession.RawIO.Write("source1:voltage:level:immediate:amplitude " + amp.ToString() + high_level1_u.SelectedItem.ToString());
+                    y_axis_handling(1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void phase1_Leave(object sender, EventArgs e)   //相位调整
+        {
+            if (phase1.Text == "")
+            {
+                y_axis_handling(1);
+            }
+            else
+            {
+                float amp = float.Parse(phase1.Text);
+                try
+                {
+                    mbSession.RawIO.Write("source1:voltage:level:immediate:amplitude " + amp.ToString() + high_level1_u.SelectedItem.ToString());
+                    y_axis_handling(1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }
